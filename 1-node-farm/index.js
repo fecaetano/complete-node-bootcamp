@@ -1,8 +1,11 @@
 // Files
-const fs = require("fs"); // API for interacting with the file system
-const http = require("http");
-const url = require("url");
-const replaceTemplate = require("./starter//modules/replaceTemplate.js");
+const fs = require('fs'); // API for interacting with the file system
+const http = require('http');
+const url = require('url');
+
+// const slugify = require("slugify");
+
+const replaceTemplate = require('./starter//modules/replaceTemplate.js');
 
 /*
 ////////// Files
@@ -43,26 +46,17 @@ console.log("Will read file...");
 const statusCodeOK = 200;
 const statusCodeNotFound = 404;
 
-const tempOverview = fs.readFileSync(
-  `${__dirname}/starter/templates/template-overview.html`,
-  "utf-8"
-);
-const tempCard = fs.readFileSync(
-  `${__dirname}/starter/templates/template-card.html`,
-  "utf-8"
-);
+const tempOverview = fs.readFileSync(`${__dirname}/starter/templates/template-overview.html`, 'utf-8');
+const tempCard = fs.readFileSync(`${__dirname}/starter/templates/template-card.html`, 'utf-8');
 
-const tempProduct = fs.readFileSync(
-  `${__dirname}/starter/templates/template-product.html`,
-  "utf-8"
-);
+const tempProduct = fs.readFileSync(`${__dirname}/starter/templates/template-product.html`, 'utf-8');
 
-const data = fs.readFileSync(
-  `${__dirname}/starter/dev-data/data.json`,
-  "utf-8"
-);
+const data = fs.readFileSync(`${__dirname}/starter/dev-data/data.json`, 'utf-8');
 
 const dataObj = JSON.parse(data);
+
+// const slugs = dataObj.map((el) => slugify(el.productName, { lower: true }));
+// console.log(slugs);
 
 const sendHttpCommand = (res, statusCode, contentType, command) => {
   let formatedContentType = `Content-type": "${contentType}"`;
@@ -71,43 +65,36 @@ const sendHttpCommand = (res, statusCode, contentType, command) => {
 };
 
 const sendCommandPageNotFound = (res) => {
-  sendHttpCommand(
-    res,
-    statusCodeNotFound,
-    "text/html",
-    "<h1>Page not found!!!</h1>"
-  );
+  sendHttpCommand(res, statusCodeNotFound, 'text/html', '<h1>Page not found!!!</h1>');
 };
 
 const server = http.createServer((req, res) => {
   const { query, pathname } = url.parse(req.url, true);
 
   // Overview
-  if (pathname === "/" || pathname === "/overview") {
-    const cardsHtml = dataObj
-      .map((el) => replaceTemplate(tempCard, el))
-      .join("");
-    const output = tempOverview.replace("{%PRODUCT_CARDS%}", cardsHtml);
-    sendHttpCommand(res, statusCodeOK, "text/html", output);
+  if (pathname === '/' || pathname === '/overview') {
+    const cardsHtml = dataObj.map((el) => replaceTemplate(tempCard, el)).join('');
+    const output = tempOverview.replace('{%PRODUCT_CARDS%}', cardsHtml);
+    sendHttpCommand(res, statusCodeOK, 'text/html', output);
     // Product
-  } else if (pathname === "/product") {
+  } else if (pathname === '/product') {
     if (query.id < dataObj.length) {
       const product = dataObj[query.id];
       const productHtmlPage = replaceTemplate(tempProduct, product);
-      sendHttpCommand(res, statusCodeOK, "text/html", productHtmlPage);
+      sendHttpCommand(res, statusCodeOK, 'text/html', productHtmlPage);
     } else {
       sendCommandPageNotFound(res);
     }
 
     // API
-  } else if (pathname === "/api") {
-    sendHttpCommand(res, statusCodeOK, "application/json", data);
+  } else if (pathname === '/api') {
+    sendHttpCommand(res, statusCodeOK, 'application/json', data);
     // 404
   } else {
     sendCommandPageNotFound(res);
   }
 });
 
-server.listen(8080, "127.0.0.1", () => {
-  console.log("Listening to requests on port 8080");
+server.listen(8080, '127.0.0.1', () => {
+  console.log('Listening to requests on port 8080');
 });
