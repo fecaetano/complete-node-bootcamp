@@ -75,14 +75,12 @@ const sendCommandPageNotFound = (res) => {
     res,
     statusCodeNotFound,
     "text/html",
-    "<h1>Page not found!</h1>"
+    "<h1>Page not found!!!</h1>"
   );
 };
 
 const server = http.createServer((req, res) => {
   const { query, pathname } = url.parse(req.url, true);
-  console.log(pathname);
-  console.log(url.parse(req.url, true));
 
   // Overview
   if (pathname === "/" || pathname === "/overview") {
