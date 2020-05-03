@@ -1,0 +1,72 @@
+===== Create =====
+
+// Create database
+use natours-test
+
+// Insert one value
+db.tours.insertOne({name: "The Forest Hiker", price: 297, rating: 4.7})
+
+// Insert many value
+db.tours.insertMany([{name: "The Sea Explorer", price: 497, rating: 4.8}, {name: "The Snow Adventure", price: 997, rating: 4.9, difficulty: "easy"}])
+
+// SEARCH
+// All databases in mongodb
+show dbs
+
+// All collections
+show collections
+
+
+// Exit mongo shell
+quit()
+
+
+===== Query operators =====
+// Find values
+db.tour.find()
+
+// Search name
+db.tours.find({name: "The Forest Hiker"})
+
+// Search difficulty
+db.tours.find({difficulty: "easy"})
+
+// Search price less than or equal (operator $lte) 500
+db.tours.find({price: {$lte:500}})
+
+// AND Query - Search price less than ($lt) and rating greater than or equal 4.8
+db.tours.find({price: {$lt:500}, rating: {$gte: 4.8} })
+
+// OR query 
+db.tours.find({ $or: [{price: {$lt:500}}, {rating: {$gte: 4.8}} ] })
+
+db.tours.find({ $or: [{price: {$gt:500}}, {rating: {$gte: 4.8}} ] })
+db.tours.find({price: {$gt:500}, rating: {$gte:4.8}})
+// Only returns name
+db.tours.find({ $or: [{price: {$gt:500}}, {rating: {$gte: 4.8}} ] }, {name:1})
+
+// UPDATE
+db.tours.updateOne({name: "The Snow Adventure"} , {$set: {price: 597} })
+db.tours.updateMany({price: {$gt:500}, rating: {$gte:4.8}}, { $set: {premium: true})
+
+db.tours.replaceOne()
+
+// DELETE
+db.tours.find()
+db.tours.deleteMany({rating: {$lt:4.8}})
+
+// Delete all
+db.tours.deleteMany({})
+
+// Mongo compass
+// Mongo Atlas
+
+
+
+
+
+
+
+
+
+
